@@ -29,9 +29,9 @@ def artist_list(request):
         encoded_data = encoded_data.decode('utf-8')
         coded = str(encoded_data[:22])
         data['artist_id'] = coded
-        data['albums'] = '/artists/'+data['artist_id']+'/albums'
-        data['tracks'] = '/artists/'+data['artist_id']+'/tracks'
-        data['self_url'] = '/artists/'+data['artist_id']
+        data['albums'] = 'https://t2-api-music.herokuapp.com/artists/'+data['artist_id']+'/albums'
+        data['tracks'] = 'https://t2-api-music.herokuapp.com/artists/'+data['artist_id']+'/tracks'
+        data['self_url'] = 'https://t2-api-music.herokuapp.com/artists/'+data['artist_id']
         serializer = ArtistSerializer(data=data)
 
         if serializer.is_valid():
@@ -74,7 +74,7 @@ def artist_albums(request, artist_id):
         except Artist.DoesNotExist:
             return HttpResponse("Artista no encontrado", status=404)
 
-        album = Album.objects.all().filter(artist='/artists/'+artist_id)
+        album = Album.objects.all().filter(artist='https://t2-api-music.herokuapp.com/artists/'+artist_id)
         serializer = AlbumSerializer(album, many=True)
         print(artist)
         return JsonResponse(serializer.data, safe=False)
@@ -87,7 +87,7 @@ def artist_albums(request, artist_id):
             return HttpResponse("Artista no existe", status=422)
 
         data = JSONParser().parse(request)
-        data['artist'] = '/artists/'+artist_id
+        data['artist'] = 'https://t2-api-music.herokuapp.com/artists/'+artist_id
 
         try:
             string = data['name'] + ':' + data['artist']
@@ -101,8 +101,8 @@ def artist_albums(request, artist_id):
         encoded_data = encoded_data.decode('utf-8')
         coded = str(encoded_data[:22])
         data['album_id'] = coded
-        data['tracks'] = '/albums/' + data['album_id'] + '/tracks'
-        data['self_url'] = '/albums/' + data['album_id']
+        data['tracks'] = 'https://t2-api-music.herokuapp.com/albums/' + data['album_id'] + '/tracks'
+        data['self_url'] = 'https://t2-api-music.herokuapp.com/albums/' + data['album_id']
         serializer = AlbumSerializer(data=data)
 
         if serializer.is_valid():
@@ -127,10 +127,10 @@ def artist_albums_play (request, artist_id):
         return HttpResponse("Artista no encontrado", status=404)
 
     if request.method == 'PUT':
-        albums = Album.objects.all().filter(artist='/artists/'+artist_id)
+        albums = Album.objects.all().filter(artist='https://t2-api-music.herokuapp.com/artists/'+artist_id)
         for album in albums:
             album_tracks_play(request, album.album_id)
-        albums = Album.objects.all().filter(artist='/artists/'+artist_id)
+        albums = Album.objects.all().filter(artist='https://t2-api-music.herokuapp.com/artists/'+artist_id)
         serializer = AlbumSerializer(albums, many=True)
         return JsonResponse(serializer.data, safe=False)
 
@@ -146,7 +146,7 @@ def artist_tracks (request, artist_id):
         return HttpResponse("Artista no encontrado", status=404)
 
     if request.method == 'GET':
-        track = Track.objects.all().filter(artist='/artists/'+artist_id)
+        track = Track.objects.all().filter(artist='https://t2-api-music.herokuapp.com/artists/'+artist_id)
         serializer = TrackSerializer(track, many=True)
         return JsonResponse(serializer.data, safe=False)
     
@@ -193,7 +193,7 @@ def album_tracks(request, album_id):
         except Album.DoesNotExist:
             return HttpResponse("Álbum no encontrado", status=404)
 
-        track = Track.objects.all().filter(album='/albums/'+album_id)
+        track = Track.objects.all().filter(album='https://t2-api-music.herokuapp.com/albums/'+album_id)
         serializer = TrackSerializer(track, many=True)
         return JsonResponse(serializer.data, safe=False)
 
@@ -207,7 +207,7 @@ def album_tracks(request, album_id):
         album_info = AlbumSerializer(album).data
 
         data = JSONParser().parse(request)
-        data['album'] = '/albums/'+ album_id
+        data['album'] = 'https://t2-api-music.herokuapp.com/albums/'+ album_id
 
         try:
             string = data['name'] + ':' + data['album']
@@ -223,7 +223,7 @@ def album_tracks(request, album_id):
         data['track_id'] = coded
         data['times_played'] = 0
         data['artist'] = album_info['artist']
-        data['self_url'] = '/tracks/' + data['track_id']
+        data['self_url'] = 'https://t2-api-music.herokuapp.com/tracks/' + data['track_id']
         serializer = TrackSerializer(data=data)
 
         if serializer.is_valid():
@@ -248,10 +248,10 @@ def album_tracks_play(request, album_id):
         return HttpResponse("Álbum no encontrado", status=404)
 
     if request.method == 'PUT':
-        tracks = Track.objects.all().filter(album='/albums/'+album_id)
+        tracks = Track.objects.all().filter(album='https://t2-api-music.herokuapp.com/albums/'+album_id)
         for track in tracks:
             track_detail_play(request, track.track_id)
-        tracks = Track.objects.all().filter(album='/albums/'+album_id)
+        tracks = Track.objects.all().filter(album='https://t2-api-music.herokuapp.com/albums/'+album_id)
         serializer = TrackSerializer(tracks, many=True)
         return JsonResponse(serializer.data, safe=False)
     
