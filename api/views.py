@@ -120,23 +120,16 @@ def artist_albums(request, artist_id):
 
             except Artist.DoesNotExist:
                 return HttpResponse("Artista no existe", status=422)
-
+            
+            data = JSONParser().parse(request)
+            data['artist'] = 'https://t2-api-music.herokuapp.com/artists/'+artist_id
             string = data['name'] + ':' + data['artist']
-            print("KAKAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+            
             if isinstance(data['genre'], (float, int, list, dict, tuple)):
-                print("KAKAAAAAAAAAAAAAAAAAAAAAAAAAAA")
                 return HttpResponse("Input inválido",status=400)
         except:
             return HttpResponse("Input inválido",status=400)
 
-        # try:
-        #     artist = Artist.objects.get(artist_id=artist_id)
-
-        # except Artist.DoesNotExist:
-        #     return HttpResponse("Artista no existe", status=422)
-
-        data = JSONParser().parse(request)
-        data['artist'] = 'https://t2-api-music.herokuapp.com/artists/'+artist_id
 
         
 
