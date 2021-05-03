@@ -123,15 +123,13 @@ def artist_albums(request, artist_id):
             
             data = JSONParser().parse(request)
             data['artist'] = 'https://t2-api-music.herokuapp.com/artists/'+artist_id
-            string = data['name'] + ':' + data['artist']
+            string = data['name'] + ':' + artist_id
+            print("printenando ", string)
             
             if isinstance(data['genre'], (float, int, list, dict, tuple)):
                 return HttpResponse("Input inválido",status=400)
         except:
             return HttpResponse("Input inválido",status=400)
-
-
-        
 
         byte_string = string.encode('utf-8')
         encoded_data = base64.b64encode(byte_string)
