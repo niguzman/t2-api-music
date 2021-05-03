@@ -124,7 +124,6 @@ def artist_albums(request, artist_id):
             data = JSONParser().parse(request)
             data['artist'] = 'https://t2-api-music.herokuapp.com/artists/'+artist_id
             string = data['name'] + ':' + artist_id
-            print("printenando ", string)
             
             if isinstance(data['genre'], (float, int, list, dict, tuple)):
                 return HttpResponse("Input inválido",status=400)
@@ -243,7 +242,7 @@ def album_tracks(request, album_id):
         try:
             data = JSONParser().parse(request)
             data['album'] = 'https://t2-api-music.herokuapp.com/albums/'+ album_id
-            string = data['name'] + ':' + data['album']
+            string = data['name'] + ':' + album_id
             if isinstance(data['duration'], (int, str, list, dict, tuple)):
                 return HttpResponse("Input inválido",status=400)
         except:
