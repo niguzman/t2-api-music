@@ -115,17 +115,25 @@ def artist_albums(request, artist_id):
 
     elif request.method == 'POST':
         try:
+            try:
+                artist = Artist.objects.get(artist_id=artist_id)
+
+            except Artist.DoesNotExist:
+                return HttpResponse("Artista no existe", status=422)
+
             string = data['name'] + ':' + data['artist']
+            print("KAKAAAAAAAAAAAAAAAAAAAAAAAAAAA")
             if isinstance(data['genre'], (float, int, list, dict, tuple)):
+                print("KAKAAAAAAAAAAAAAAAAAAAAAAAAAAA")
                 return HttpResponse("Input inválido",status=400)
         except:
             return HttpResponse("Input inválido",status=400)
 
-        try:
-            artist = Artist.objects.get(artist_id=artist_id)
+        # try:
+        #     artist = Artist.objects.get(artist_id=artist_id)
 
-        except Artist.DoesNotExist:
-            return HttpResponse("Artista no existe", status=422)
+        # except Artist.DoesNotExist:
+        #     return HttpResponse("Artista no existe", status=422)
 
         data = JSONParser().parse(request)
         data['artist'] = 'https://t2-api-music.herokuapp.com/artists/'+artist_id
@@ -242,6 +250,13 @@ def album_tracks(request, album_id):
 
     elif request.method == 'POST':
         try:
+            string = data['name'] + ':' + data['album']
+            if isinstance(data['duration'], (int, str, list, dict, tuple)):
+                return HttpResponse("Input inválido",status=400)
+        except:
+            return HttpResponse("Input inválido",status=400)
+
+        try:
             album = Album.objects.get(album_id=album_id)
 
         except Album.DoesNotExist:
@@ -252,12 +267,7 @@ def album_tracks(request, album_id):
         data = JSONParser().parse(request)
         data['album'] = 'https://t2-api-music.herokuapp.com/albums/'+ album_id
 
-        try:
-            string = data['name'] + ':' + data['album']
-            if isinstance(data['duration'], (int, str, list, dict, tuple)):
-                return HttpResponse("Input inválido",status=400)
-        except:
-            return HttpResponse("Input inválido",status=400)
+        
         
         byte_string = string.encode('utf-8')
         encoded_data = base64.b64encode(byte_string)
