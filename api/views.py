@@ -173,7 +173,7 @@ def album_detail(request, album_id):
 
     elif request.method == 'DELETE':
         album.delete()
-        return HttpResponse("Álbum eliminado", status=204)
+        return HttpResponse(status=204)
     
     else:
         return HttpResponse("Método no permitido", status=405)
@@ -277,7 +277,7 @@ def track_detail(request, track_id):
 
     elif request.method == 'DELETE':
         track.delete()
-        return HttpResponse("Canción eliminada", status=204)
+        return HttpResponse(status=204)
     
     else:
         return HttpResponse("Método no permitido", status=405)
