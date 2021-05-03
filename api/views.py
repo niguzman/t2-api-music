@@ -8,12 +8,42 @@ import base64
 
 # Create your views here.
 
+def data_show(variable):
+    dicionario = dict()
+    lista = []
+    
+    for dic in variable:
+        for key, value in dic.items():
+            if "_id" in key:
+                dicionario["id"] = value
+            elif "self_" in key:
+                dicionario["self"] = value
+            else:
+                dicionario[key] = value
+        lista.append(dicionario)
+    return lista
+
+
+def data_show_unit(variable):
+    dicionario = dict()
+    
+    for key, value in variable.items():
+        if "_id" in key:
+            dicionario["id"] = value
+        elif "self_" in key:
+            dicionario["self"] = value
+        else:
+            dicionario[key] = value
+    return dicionario
+
+
 @csrf_exempt
 def artist_list(request):
     if request.method == 'GET':
         artists = Artist.objects.all()
         serializer = ArtistSerializer(artists, many=True)
-        return JsonResponse(serializer.data, safe=False)
+        out = data_show(serializer.data)
+        return JsonResponse(out, safe=False)
     
     elif request.method == 'POST':
         data = JSONParser().parse(request)
@@ -53,9 +83,10 @@ def artist_detail(request, artist_id):
     except Artist.DoesNotExist:
         return HttpResponse("Artista no encontrado", status=404)
 
-    if request.method == 'GET':
+    if request.method == 'GET': #HACERLO SIN LISTA
         serializer = ArtistSerializer(artist)
-        return JsonResponse(serializer.data)
+        out = data_show_unit(serializer.data)
+        return JsonResponse(out)
 
     elif request.method == 'DELETE':
         artist.delete()
@@ -76,8 +107,8 @@ def artist_albums(request, artist_id):
 
         album = Album.objects.all().filter(artist='https://t2-api-music.herokuapp.com/artists/'+artist_id)
         serializer = AlbumSerializer(album, many=True)
-        print(artist)
-        return JsonResponse(serializer.data, safe=False)
+        out = data_show(serializer.data)
+        return JsonResponse(out, safe=False)
 
     elif request.method == 'POST':
         try:
@@ -148,7 +179,8 @@ def artist_tracks (request, artist_id):
     if request.method == 'GET':
         track = Track.objects.all().filter(artist='https://t2-api-music.herokuapp.com/artists/'+artist_id)
         serializer = TrackSerializer(track, many=True)
-        return JsonResponse(serializer.data, safe=False)
+        out = data_show(serializer.data)
+        return JsonResponse(out, safe=False)
     
     else:
         return HttpResponse("Método no permitido", status=405)
@@ -159,7 +191,8 @@ def album_list(request):
     if request.method == 'GET':
         albums = Album.objects.all()
         serializer = AlbumSerializer(albums, many=True)
-        return JsonResponse(serializer.data, safe=False)
+        out = data_show(serializer.data)
+        return JsonResponse(out, safe=False)
     
     else:
         return HttpResponse("Método no permitido", status=405)
@@ -172,9 +205,10 @@ def album_detail(request, album_id):
     except Album.DoesNotExist:
         return HttpResponse("Álbum no encontrado", status=404)
 
-    if request.method == 'GET':
+    if request.method == 'GET': #HACERLO SIN LISTA
         serializer = AlbumSerializer(album)
-        return JsonResponse(serializer.data)
+        out = data_show_unit(serializer.data)
+        return JsonResponse(out)
 
     elif request.method == 'DELETE':
         album.delete()
@@ -195,7 +229,8 @@ def album_tracks(request, album_id):
 
         track = Track.objects.all().filter(album='https://t2-api-music.herokuapp.com/albums/'+album_id)
         serializer = TrackSerializer(track, many=True)
-        return JsonResponse(serializer.data, safe=False)
+        out = data_show(serializer.data)
+        return JsonResponse(out, safe=False)
 
     elif request.method == 'POST':
         try:
@@ -264,7 +299,8 @@ def track_list(request):
     if request.method == 'GET':
         tracks = Track.objects.all()
         serializer = TrackSerializer(tracks, many=True)
-        return JsonResponse(serializer.data, safe=False)
+        out = data_show(serializer.data)
+        return JsonResponse(out, safe=False)
     
     else:
         return HttpResponse("Método no permitido", status=405)
@@ -278,9 +314,10 @@ def track_detail(request, track_id):
     except Track.DoesNotExist:
         return HttpResponse("Canción no encontrada", status=404)
 
-    if request.method == 'GET':
+    if request.method == 'GET': #HACERLO SIN LISTA
         serializer = TrackSerializer(track)
-        return JsonResponse(serializer.data)
+        out = data_show_unit(serializer.data)
+        return JsonResponse(out)
 
     elif request.method == 'DELETE':
         track.delete()
