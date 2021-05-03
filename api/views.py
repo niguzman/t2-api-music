@@ -243,6 +243,8 @@ def album_tracks(request, album_id):
 
     elif request.method == 'POST':
         try:
+            data = JSONParser().parse(request)
+            data['album'] = 'https://t2-api-music.herokuapp.com/albums/'+ album_id
             string = data['name'] + ':' + data['album']
             if isinstance(data['duration'], (int, str, list, dict, tuple)):
                 return HttpResponse("Input inválido",status=400)
@@ -257,8 +259,7 @@ def album_tracks(request, album_id):
 
         album_info = AlbumSerializer(album).data
 
-        data = JSONParser().parse(request)
-        data['album'] = 'https://t2-api-music.herokuapp.com/albums/'+ album_id
+        
 
         
         
