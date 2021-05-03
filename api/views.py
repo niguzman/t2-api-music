@@ -56,7 +56,7 @@ def artist_detail(request, artist_id):
 
     elif request.method == 'DELETE':
         artist.delete()
-        return HttpResponse("Artista eliminado", status=204)
+        return HttpResponse(status=204)
 
     else:
         return HttpResponse("Método no permitido", status=405)
