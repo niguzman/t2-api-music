@@ -20,7 +20,7 @@ def artist_list(request):
         try:
             byte_string = data['name'].encode('utf-8')
         except:
-            return HttpResponse(status=400)
+            return HttpResponse("input inválido",status=400)
 
         encoded_data = base64.b64encode(byte_string)
         encoded_data = encoded_data.decode('utf-8')
@@ -89,7 +89,7 @@ def artist_albums(request, artist_id):
         try:
             string = data['name'] + ':' + data['artist']
         except:
-            return HttpResponse(status=400)
+            return HttpResponse("input inválido",status=400)
         
         byte_string = string.encode('utf-8')
         encoded_data = base64.b64encode(byte_string)
@@ -207,7 +207,7 @@ def album_tracks(request, album_id):
         try:
             string = data['name'] + ':' + data['album']
         except:
-            return HttpResponse(status=400)
+            return HttpResponse("input inválido",status=400)
         
         byte_string = string.encode('utf-8')
         encoded_data = base64.b64encode(byte_string)
