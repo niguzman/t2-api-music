@@ -71,7 +71,9 @@ def artist_list(request):
                 return JsonResponse(out, status=409)
             except:
                 serializer.save()
-                return JsonResponse(serializer.data, status=201)
+                out = data_show_unit(serializer.data)
+                return JsonResponse(out, status=201)
+
         return JsonResponse(serializer.errors, status=400)
     else:
         return HttpResponse("Método no permitido", status=405)
@@ -144,7 +146,8 @@ def artist_albums(request, artist_id):
                 return JsonResponse(out, status=409)
             except:
                 serializer.save(artist_link = artist)
-                return JsonResponse(serializer.data, status=201)
+                out = data_show_unit(serializer.data)
+                return JsonResponse(out, status=201)
         return JsonResponse(serializer.errors, status=400)
 
     else:
@@ -165,7 +168,8 @@ def artist_albums_play (request, artist_id):
             album_tracks_play(request, album.album_id)
         albums = Album.objects.all().filter(artist='https://t2-api-music.herokuapp.com/artists/'+artist_id)
         serializer = AlbumSerializer(albums, many=True)
-        return JsonResponse(serializer.data, safe=False)
+        out = data_show(serializer.data)
+        return JsonResponse(out, safe=False)
 
     else:
         return HttpResponse("Método no permitido", status=405)
@@ -270,7 +274,8 @@ def album_tracks(request, album_id):
                 return JsonResponse(out, status=409)
             except:
                 serializer.save(album_link = album)
-                return JsonResponse(serializer.data, status=201)
+                out = data_show_unit(serializer.data)
+                return JsonResponse(out, status=201)
         return JsonResponse(serializer.errors, status=400)
 
     else:
@@ -291,7 +296,8 @@ def album_tracks_play(request, album_id):
             track_detail_play(request, track.track_id)
         tracks = Track.objects.all().filter(album='https://t2-api-music.herokuapp.com/albums/'+album_id)
         serializer = TrackSerializer(tracks, many=True)
-        return JsonResponse(serializer.data, safe=False)
+        out = data_show(serializer.data)
+        return JsonResponse(out, safe=False)
     
     else:
         return HttpResponse("Método no permitido", status=405)
@@ -352,7 +358,8 @@ def track_detail_play(request, track_id):
 
         if serializer.is_valid():
             serializer.save()
-            return JsonResponse(serializer.data, status=200)
+            out = data_show_unit(serializer.data)
+            return JsonResponse(out, status=200)
         return JsonResponse(serializer.errors, status=400) #Nunca debería mostrar este error
 
     else:
