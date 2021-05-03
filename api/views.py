@@ -19,11 +19,11 @@ def artist_list(request):
         data = JSONParser().parse(request)
         try:
             byte_string = data['name'].encode('utf-8')
+            if isinstance(data['age'], (float, str, list, dict, tuple)):
+                return HttpResponse("Input inválido",status=400)
         except:
             return HttpResponse("Input inválido",status=400)
 
-        if isinstance(data['age'], (float, str, list, dict, tuple)):
-            return HttpResponse("Input inválido",status=400)
 
         encoded_data = base64.b64encode(byte_string)
         encoded_data = encoded_data.decode('utf-8')
@@ -91,9 +91,9 @@ def artist_albums(request, artist_id):
 
         try:
             string = data['name'] + ':' + data['artist']
+            if isinstance(data['genre'], (float, int, list, dict, tuple)):
+                return HttpResponse("Input inválido",status=400)
         except:
-            return HttpResponse("Input inválido",status=400)
-        if isinstance(data['genre'], (float, int, list, dict, tuple)):
             return HttpResponse("Input inválido",status=400)
 
         byte_string = string.encode('utf-8')
@@ -211,9 +211,9 @@ def album_tracks(request, album_id):
 
         try:
             string = data['name'] + ':' + data['album']
+            if isinstance(data['duration'], (int, str, list, dict, tuple)):
+                return HttpResponse("Input inválido",status=400)
         except:
-            return HttpResponse("Input inválido",status=400)
-        if isinstance(data['duration'], (int, str, list, dict, tuple)):
             return HttpResponse("Input inválido",status=400)
         
         byte_string = string.encode('utf-8')
