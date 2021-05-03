@@ -67,7 +67,8 @@ def artist_list(request):
         if serializer.is_valid():
             try:
                 artist = Artist.objects.get(artist_id=data['artist_id'])
-                return JsonResponse(serializer.errors, status=409)
+                out = data_show_unit(serializer.data)
+                return JsonResponse(out, status=409)
             except:
                 serializer.save()
                 return JsonResponse(serializer.data, status=201)
@@ -139,7 +140,8 @@ def artist_albums(request, artist_id):
         if serializer.is_valid():
             try:
                 album = Album.objects.get(album_id=data['album_id'])
-                return JsonResponse(serializer.errors, status=409)
+                out = data_show_unit(serializer.data)
+                return JsonResponse(out, status=409)
             except:
                 serializer.save(artist_link = artist)
                 return JsonResponse(serializer.data, status=201)
@@ -264,7 +266,8 @@ def album_tracks(request, album_id):
         if serializer.is_valid():
             try:
                 track = Track.objects.get(track_id=data['track_id'])
-                return JsonResponse(serializer.errors, status=409)
+                out = data_show_unit(serializer.data)
+                return JsonResponse(out, status=409)
             except:
                 serializer.save(album_link = album)
                 return JsonResponse(serializer.data, status=201)
