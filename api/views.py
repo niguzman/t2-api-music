@@ -20,7 +20,7 @@ def artist_list(request):
         try:
             byte_string = data['name'].encode('utf-8')
         except:
-            return HttpResponse("input inválido",status=400)
+            return HttpResponse("Input inválido",status=400)
 
         encoded_data = base64.b64encode(byte_string)
         encoded_data = encoded_data.decode('utf-8')
@@ -40,7 +40,7 @@ def artist_list(request):
                 return JsonResponse(serializer.data, status=201)
         return JsonResponse(serializer.errors, status=400)
     else:
-        return HttpResponse(status=405)
+        return HttpResponse("Método no permitido", status=405)
 
 @csrf_exempt
 def artist_detail(request, artist_id):
@@ -48,7 +48,7 @@ def artist_detail(request, artist_id):
         artist = Artist.objects.get(artist_id=artist_id)
 
     except Artist.DoesNotExist:
-        return HttpResponse(status=404)
+        return HttpResponse("Artista no encontrado", status=404)
 
     if request.method == 'GET':
         serializer = ArtistSerializer(artist)
@@ -56,10 +56,10 @@ def artist_detail(request, artist_id):
 
     elif request.method == 'DELETE':
         artist.delete()
-        return HttpResponse(status=204)
+        return HttpResponse("Artista eliminado", status=204)
 
     else:
-        return HttpResponse(status=405)
+        return HttpResponse("Método no permitido", status=405)
 
 @csrf_exempt
 def artist_albums(request, artist_id):
@@ -69,7 +69,7 @@ def artist_albums(request, artist_id):
             artist = Artist.objects.get(artist_id=artist_id)
 
         except Artist.DoesNotExist:
-            return HttpResponse(status=404)
+            return HttpResponse("Artista no encontrado", status=404)
 
         album = Album.objects.all().filter(artist='/artists/'+artist_id)
         serializer = AlbumSerializer(album, many=True)
@@ -81,7 +81,7 @@ def artist_albums(request, artist_id):
             artist = Artist.objects.get(artist_id=artist_id)
 
         except Artist.DoesNotExist:
-            return HttpResponse(status=422)
+            return HttpResponse("Artista no existe", status=422)
 
         data = JSONParser().parse(request)
         data['artist'] = '/artists/'+artist_id
@@ -89,7 +89,7 @@ def artist_albums(request, artist_id):
         try:
             string = data['name'] + ':' + data['artist']
         except:
-            return HttpResponse("input inválido",status=400)
+            return HttpResponse("Input inválido",status=400)
         
         byte_string = string.encode('utf-8')
         encoded_data = base64.b64encode(byte_string)
@@ -110,7 +110,7 @@ def artist_albums(request, artist_id):
         return JsonResponse(serializer.errors, status=400)
 
     else:
-        return HttpResponse(status=405)
+        return HttpResponse("Método no permitido", status=405)
 
 
 @csrf_exempt
@@ -119,7 +119,7 @@ def artist_albums_play (request, artist_id):
         artist = Artist.objects.get(artist_id=artist_id)
 
     except Artist.DoesNotExist:
-        return HttpResponse(status=404)
+        return HttpResponse("Artista no encontrado", status=404)
 
     if request.method == 'PUT':
         albums = Album.objects.all().filter(artist='/artists/'+artist_id)
@@ -130,7 +130,7 @@ def artist_albums_play (request, artist_id):
         return JsonResponse(serializer.data, safe=False)
 
     else:
-        return HttpResponse(status=405)
+        return HttpResponse("Método no permitido", status=405)
 
 @csrf_exempt
 def artist_tracks (request, artist_id):
@@ -138,7 +138,7 @@ def artist_tracks (request, artist_id):
         Artist.objects.get(artist_id=artist_id)
 
     except Artist.DoesNotExist:
-        return HttpResponse(status=404)
+        return HttpResponse("Artista no encontrado", status=404)
 
     if request.method == 'GET':
         track = Track.objects.all().filter(artist='/artists/'+artist_id)
@@ -146,7 +146,7 @@ def artist_tracks (request, artist_id):
         return JsonResponse(serializer.data, safe=False)
     
     else:
-        return HttpResponse(status=405)
+        return HttpResponse("Método no permitido", status=405)
 
 
 @csrf_exempt
@@ -157,7 +157,7 @@ def album_list(request):
         return JsonResponse(serializer.data, safe=False)
     
     else:
-        return HttpResponse(status=405)
+        return HttpResponse("Método no permitido", status=405)
 
 @csrf_exempt
 def album_detail(request, album_id):
@@ -165,7 +165,7 @@ def album_detail(request, album_id):
         album = Album.objects.get(album_id=album_id)
 
     except Album.DoesNotExist:
-        return HttpResponse(status=404)
+        return HttpResponse("Álbum no encontrado", status=404)
 
     if request.method == 'GET':
         serializer = AlbumSerializer(album)
@@ -173,10 +173,10 @@ def album_detail(request, album_id):
 
     elif request.method == 'DELETE':
         album.delete()
-        return HttpResponse(status=204)
+        return HttpResponse("Álbum eliminado", status=204)
     
     else:
-        return HttpResponse(status=405)
+        return HttpResponse("Método no permitido", status=405)
 
 @csrf_exempt
 def album_tracks(request, album_id):
@@ -186,7 +186,7 @@ def album_tracks(request, album_id):
             album = Album.objects.get(album_id=album_id)
 
         except Album.DoesNotExist:
-            return HttpResponse(status=404)
+            return HttpResponse("Álbum no encontrado", status=404)
 
         track = Track.objects.all().filter(album='/albums/'+album_id)
         serializer = TrackSerializer(track, many=True)
@@ -197,7 +197,7 @@ def album_tracks(request, album_id):
             album = Album.objects.get(album_id=album_id)
 
         except Album.DoesNotExist:
-            return HttpResponse(status=422)
+            return HttpResponse("Álbum no existe", status=422)
 
         album_info = AlbumSerializer(album).data
 
@@ -207,7 +207,7 @@ def album_tracks(request, album_id):
         try:
             string = data['name'] + ':' + data['album']
         except:
-            return HttpResponse("input inválido",status=400)
+            return HttpResponse("Input inválido",status=400)
         
         byte_string = string.encode('utf-8')
         encoded_data = base64.b64encode(byte_string)
@@ -229,7 +229,7 @@ def album_tracks(request, album_id):
         return JsonResponse(serializer.errors, status=400)
 
     else:
-        return HttpResponse(status=405)
+        return HttpResponse("Método no permitido", status=405)
 
 
 @csrf_exempt
@@ -238,7 +238,7 @@ def album_tracks_play(request, album_id):
         album = Album.objects.get(album_id=album_id)
 
     except Album.DoesNotExist:
-        return HttpResponse(status=404)
+        return HttpResponse("Álbum no encontrado", status=404)
 
     if request.method == 'PUT':
         tracks = Track.objects.all().filter(album='/albums/'+album_id)
@@ -249,7 +249,7 @@ def album_tracks_play(request, album_id):
         return JsonResponse(serializer.data, safe=False)
     
     else:
-        return HttpResponse(status=405)
+        return HttpResponse("Método no permitido", status=405)
 
 
 @csrf_exempt
@@ -260,7 +260,7 @@ def track_list(request):
         return JsonResponse(serializer.data, safe=False)
     
     else:
-        return HttpResponse(status=405)
+        return HttpResponse("Método no permitido", status=405)
 
 
 @csrf_exempt
@@ -269,7 +269,7 @@ def track_detail(request, track_id):
         track = Track.objects.get(track_id=track_id)
 
     except Track.DoesNotExist:
-        return HttpResponse(status=404)
+        return HttpResponse("Canción no encontrada", status=404)
 
     if request.method == 'GET':
         serializer = TrackSerializer(track)
@@ -277,10 +277,10 @@ def track_detail(request, track_id):
 
     elif request.method == 'DELETE':
         track.delete()
-        return HttpResponse(status=204)
+        return HttpResponse("Canción eliminada", status=204)
     
     else:
-        return HttpResponse(status=405)
+        return HttpResponse("Método no permitido", status=405)
 
 @csrf_exempt
 def track_detail_play(request, track_id):
@@ -288,7 +288,7 @@ def track_detail_play(request, track_id):
         track = Track.objects.get(track_id=track_id)
 
     except Track.DoesNotExist:
-        return HttpResponse(status=404)
+        return HttpResponse("Canción no encontrada", status=404)
 
     if request.method == 'PUT':
         track_info = TrackSerializer(track).data
@@ -309,4 +309,4 @@ def track_detail_play(request, track_id):
         return JsonResponse(serializer.errors, status=400) #Nunca debería mostrar este error
 
     else:
-        return HttpResponse(status=405)
+        return HttpResponse("Método no permitido", status=405)
